@@ -1,4 +1,4 @@
- //DOB in randomuser.me/api lists DOB as YEAR/MO/DAY 4/2/2, restructure as MO/DY/YR 2/2/2 so it appears in US bday order on the ui 
+ //DOB in randomuser.me/api lists DOB as YEAR/MO/DAY 4/2/2, restructure as MO/DY/YR 2/2/4 so it appears in US bday order on the ui 
     const birthdayRestructure = (birthday) => {
         let birthdayRestruct = new Date(birthday).toLocaleDateString('en-US', { year: '4-digit', month: 'numeric', day: 'numeric' });
         return birthdayRestruct;
