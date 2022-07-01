@@ -9,10 +9,9 @@
         let image = data.picture.large;
         let name = `${data.name.first} ${data.name.last}`;
         let email = data.email;
-        let city = data.location.city;
         let username = data.login.username;
         let cell = data.phone;
-        let fullAddress = `${data.location.street}, ${city}, ${data.location.state} ${data.location.postcode}`;
+        let fullAddress = `${data.location.street}, ${data.location.city}, ${data.location.state} ${data.location.postcode}`;
         let birthday = birthdayRestructure(data.dob);
         
   
