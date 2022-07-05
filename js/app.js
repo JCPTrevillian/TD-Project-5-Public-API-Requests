@@ -2,21 +2,49 @@
 const peopleUrl = 'https://randomuser.me/api/?results=12&nat=us';
 const galleryDiv = document.getElementById('gallery');
 const searchDiv =  document.querySelector('.search-container'); 
- 
- //DOB in randomuser.me/api lists DOB as YEAR/MO/DAY 4/2/2, restructure as MO/DY/YR 2/2/4 so it appears in US bday order on the ui 
-    const birthdayRestructure = (birthday) => {
-        let birthdayRestruct = new Date(birthday).toLocaleDateString('en-US', { year: '4-digit', month: 'numeric', day: 'numeric' });
-        return birthdayRestruct;
-    }
-    
-    //Setting up variables with unstuctured data in randomuser so I can easily call variables with newly structured data in successive steps 
-    const employeeData = (data) => {
-        let image = data.picture.large;
-        let name = `${data.name.first} ${data.name.last}`;
-        let email = data.email;
-        let username = data.login.username;
-        let cell = data.phone;
-        let fullAddress = `${data.location.street}, ${data.location.city}, ${data.location.state} ${data.location.postcode}`;
-        let birthday = birthdayRestructure(data.dob);
         
-  
+      
+         //initiate fetch for parsed data for ui 
+        async function getData(url) {
+            const userResponse = await fetch(url).catch(e => console.log('Error fetching data: ', e) );
+            const userJSON = await userResponse.json();
+            const users = userJSON.results.map(async user => user);
+            return Promise.all(users);
+        }
+        
+        //phone number format 
+        function formatPhone (phoneNumber) {
+            const regex = /^\D*(\d{3})\D*(\d{3})\D*(\d{4})\D*$/;
+            return phoneNumber.replace(regex, '($1) $2-$3');  
+        }
+        
+        //data for user directory/gallery 
+        function generateGallery(data) {
+            data.map((person, index) => {
+                const divIndex = index;
+                const divEl = document.createElement('div');
+                divEl.className = 'card';
+                divEl.dataset.index = divIndex;
+                divEl.innerHTML = `
+                <div class="card-img-container">
+                    <img class="card-img" src="${person.picture.large}" alt="profile picture">
+                </div>
+                <div class="card-info-container">
+                    <h3 id="${person.name.last + person.name.first}" class="card-name cap">${person.name.first} ${person.name.last}</h3>
+                    <p class="card-text">${person.email}</p>
+                    <p class="card-text cap">${person.location.city}, ${person.location.state}</p>
+                </div>
+                `;
+                galleryDiv.appendChild(divEl);
+            });
+        }
+        
+        
+         //birthday format - orig data form not mo/dy/year 2/2/4, fix that. 
+        function formatDate (dateOfBirth){
+            let newDate = new Date(dateOfBirth).toISOString().split('T')[0].split('-');
+            newDate = `${newDate[1]}/${newDate[2]}/${newDate[0]}`;
+            return newDate;
+        }
+        
+        
