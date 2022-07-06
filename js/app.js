@@ -94,4 +94,60 @@ const searchDiv =  document.querySelector('.search-container');
             });
             return divModal;
         }
+        /**
+ * Create and append a search bar to the page dinamically 
+ */
+function generateSearchBar(){
+    const searchForm =  document.createElement('form');
+    searchForm.action = "#";
+    searchForm.method = "get";
+    searchForm.innerHTML = `
+    <input type="search" id="search-input" class="search-input" placeholder="Search...">
+    <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
+    `;
+    searchDiv.appendChild(searchForm);
+}
+
+/**
+ * Filter employees by name based on the value inserted in the search field
+ * @param {object} employee - the search bar field
+ */
+function searchEmployee (employee) {
+    const employeeNames =  document.querySelectorAll('.card-name');
+    for (let i = 0; i < employeeNames.length; i+= 1){
+        if (employee.value.length !== 0 & employeeNames[i].innerHTML.toLowerCase().includes(employee.value.toLowerCase())){
+            employeeNames[i].parentElement.parentElement.style.display = '';
+        }
+        else if (employee.value.length === 0) {
+            employeeNames[i].parentElement.parentElement.style.display = '';
+        }
+        else {
+            employeeNames[i].parentElement.parentElement.style.display = 'none';
+        }
+    }
+}
+
+//needed help with async, creates page with fetched data. 
+async function execute () {
+    const userProfiles = await getData(peopleUrl).catch(e => {
+        document.querySelector('body').innerHTML = '<h3>Something went wrong.</h3>';
+    });
+    generateGallery(userProfiles);
+    generateSearchBar();
+    const input = document.getElementById('search-input');
+    const submit = document.getElementById('search-submit');
+    submit.addEventListener('click', () => {
+        searchEmployee(input);
+    })
+    input.addEventListener('keyup', () => {
+        searchEmployee(input);
+    });
+    const cardDiv = document.querySelectorAll(".card");
+    cardDiv.forEach(item => {
+        item.addEventListener('click', (event) => {
+            generateModalWindow(userProfiles, event.target.closest('.card').dataset.index);
+        });   
+    });
+}
+execute();
         
