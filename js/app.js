@@ -46,5 +46,52 @@ const searchDiv =  document.querySelector('.search-container');
             newDate = `${newDate[1]}/${newDate[2]}/${newDate[0]}`;
             return newDate;
         }
-        
+         //modal window format - states full name not 2 letter abbrev. 
+         function generateModalWindow(data, index) {
+            const divModal =  document.createElement('div');
+            divModal.className = 'modal-container';
+            divModal.innerHTML = `
+            <div class="modal">
+                <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
+                <div class="modal-info-container">
+                    <img class="modal-img" src="${data[index].picture.large}" alt="profile picture">
+                    <h3 id="${data[index].name.last + data[index].name.first}" class="modal-name cap">${data[index].name.first} ${data[index].name.last}</h3>
+                    <p class="modal-text">${data[index].email}</p>
+                    <p class="modal-text cap">${data[index].location.city}</p>
+                    <hr>
+                    <p class="modal-text">${formatPhone(data[index].cell)}</p>
+                    <p class="modal-text">${data[index].location.street.number} ${data[index].location.street.name}, ${data[index].location.city}, ${data[index].location.state} ${data[index].location.postcode}</p>
+                    <p class="modal-text">Birthday: ${formatDate(data[index].dob.date)}</p>
+                </div>
+            </div>
+            <div class="modal-btn-container">
+                <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
+                <button type="button" id="modal-next" class="modal-next btn">Next</button>
+            </div>
+            `;
+            document.querySelector('body').appendChild(divModal);
+            //toggle 
+            const nextButton = document.getElementById('modal-next');
+            const prevButton = document.getElementById('modal-prev');
+            prevButton.addEventListener('click', () => {
+                divModal.remove();
+                if (parseInt(index) === 0) {
+                    index = '12';
+                }
+                document.querySelector('body').appendChild(generateModalWindow(data, (parseInt(index) - 1)));  
+            });
+            nextButton.addEventListener('click', () => {
+                divModal.remove();
+                if (parseInt(index) === 11){
+                    index = '-1';
+                }
+                document.querySelector('body').appendChild(generateModalWindow(data, (parseInt(index) + 1)));
+            });
+            //close button 
+            const closeButton =  document.getElementById('modal-close-btn');
+            closeButton.addEventListener('click', (e)=> {
+                divModal.remove();
+            });
+            return divModal;
+        }
         
