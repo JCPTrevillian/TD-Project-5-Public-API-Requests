@@ -38,15 +38,15 @@ const searchDiv =  document.querySelector('.search-container');
                 galleryDiv.appendChild(divEl);
             });
         }
-        
-        
+
          //birthday format - orig data form not mo/dy/year 2/2/4, fix that. 
         function formatDate (dateOfBirth){
             let newDate = new Date(dateOfBirth).toISOString().split('T')[0].split('-');
             newDate = `${newDate[1]}/${newDate[2]}/${newDate[0]}`;
             return newDate;
         }
-         //modal window format - states full name not 2 letter abbrev. 
+         
+        //modal window format - states full name not 2 letter abbrev. 
          function generateModalWindow(data, index) {
             const divModal =  document.createElement('div');
             divModal.className = 'modal-container';
